@@ -23,10 +23,12 @@ FILELOCK_DEBUG = False
 
 
 class LGDLFS:
-    def __init__(self, config_file=None):
+    def __init__(self, config_file=None, data_path=None):
         self.log = logging.getLogger('LGDLFS')
 
-        if config_path := os.environ.get('LEGENDARY_CONFIG_PATH'):
+        if data_path:
+            self.path = data_path
+        elif config_path := os.environ.get('LEGENDARY_CONFIG_PATH'):
             self.path = config_path
         elif config_path := os.environ.get('XDG_CONFIG_HOME'):
             self.path = os.path.join(config_path, 'legendary')
