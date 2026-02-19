@@ -42,8 +42,8 @@ logger = logging.getLogger('cli')
 
 
 class LegendaryCLI:
-    def __init__(self, override_config=None, api_timeout=None):
-        self.core = LegendaryCore(override_config, timeout=api_timeout)
+    def __init__(self, override_config=None, api_timeout=None, data_path=None):
+        self.core = LegendaryCore(override_config, timeout=api_timeout, data_path=data_path)
         self.logger = logging.getLogger('cli')
         self.logging_queue = None
 
@@ -2796,7 +2796,9 @@ def main():
     parser.add_argument('-y', '--yes', dest='yes', action='store_true', help='Default to yes for all prompts')
     parser.add_argument('-V', '--version', dest='version', action='store_true', help='Print version and exit')
     parser.add_argument('-c', '--config-file', dest='config_file', action='store', metavar='<path/name>',
-                        help=argparse.SUPPRESS)
+                        help='Path to a specific config.ini file')
+    parser.add_argument('-C', '--config-dir', dest='config_dir', action='store', metavar='<path>',
+                        help='Set the directory for configuration and data or set env LEGENDARY_CONFIG_PATH')
     parser.add_argument('-J', '--pretty-json', dest='pretty_json', action='store_true',
                         help='Pretty-print JSON')
     parser.add_argument('-A', '--api-timeout', dest='api_timeout', action='store',
@@ -3211,7 +3213,7 @@ def main():
                 subprocess.Popen(['cmd', '/K', 'echo>nul'])
         return
 
-    cli = LegendaryCLI(override_config=args.config_file, api_timeout=args.api_timeout)
+    cli = LegendaryCLI(override_config=args.config_file,api_timeout=args.api_timeout,data_path=args.config_dir)
     ql = cli.setup_threaded_logging()
 
     config_ll = cli.core.lgd.config.get('Legendary', 'log_level', fallback='info')
